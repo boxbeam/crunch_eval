@@ -8,6 +8,8 @@ pub mod expr;
 pub mod number;
 mod parser;
 mod func;
+#[cfg(test)]
+mod tests;
 
 #[derive(Debug)]
 pub enum EvalError {

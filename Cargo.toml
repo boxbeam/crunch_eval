@@ -2,6 +2,9 @@
 name = "crunch_eval"
 version = "0.1.0"
 edition = "2021"
+license = "MIT"
+description = "A high-performance expression evaluator"
+repository = "https://github.com/Redempt/crunch_eval"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 

@@ -1,7 +1,7 @@
 use crate::expr::Expr;
 
 #[test]
-fn feature() {
+fn test() {
     assert_eq!(
         Expr::<i32, 0>::compile("1 + 1", Default::default())
             .unwrap()

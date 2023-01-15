@@ -32,8 +32,15 @@ impl ParserState<'_> {
         }
     }
 
-    pub fn take_while(&mut self, token_type: &'static str, filter: fn(char) -> bool) -> Result<String, ParserError> {
-        let collected = self.source[self.pos..].iter().take_while(|&c| filter(*c)).collect::<String>();
+    pub fn take_while(
+        &mut self,
+        token_type: &'static str,
+        filter: fn(char) -> bool,
+    ) -> Result<String, ParserError> {
+        let collected = self.source[self.pos..]
+            .iter()
+            .take_while(|&c| filter(*c))
+            .collect::<String>();
         if collected.len() > 0 {
             self.pos += collected.len();
             Ok(collected)

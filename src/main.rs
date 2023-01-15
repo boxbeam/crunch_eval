@@ -1,8 +1,15 @@
-use crunch_eval::expr::Expr;
+use crunch_eval::{env::ExprEnv, expr::Expr};
 
 fn main() {
-    let expr = "6.5*7.8^2.3 + (3.5^3+7/2)^3 -(5*4/(2-3))*4 + 6.5*7.8^2.3 + (3.5^3+7/2)^3 -(5*4/(2-3))*4 + 6.5*7.8^2.3 + (3.5^3+7/2)^3 -(5*4/(2-3))*4 + 6.5*7.8^2.3 + (3.5^3+7/2)^3 -(5*4/(2-3))*4";
-    let expr = Expr::compile(expr, Default::default()).unwrap();
-    let val: f64 = expr.evaluate(&[]).unwrap();
-    println!("{}", val);
+    loop {
+        std::io::stdin()
+            .lines()
+            .into_iter()
+            .map(|line| line.unwrap())
+            .for_each(|line| {
+                let expr = Expr::compile(line, ExprEnv::default().with_trig()).unwrap();
+                let val: f64 = expr.evaluate(&[]).unwrap();
+                println!(" = {}", val);
+            });
+    }
 }

@@ -29,7 +29,7 @@ impl<T: Number, const N: usize> Function<T, N> {
         });
         Function {
             func: boxed,
-            args: N,
+            args: A,
             num: PhantomData::default(),
         }
     }
@@ -37,8 +37,8 @@ impl<T: Number, const N: usize> Function<T, N> {
 
 #[derive(Clone, Debug)]
 pub(crate) struct FunctionInvoke<T: Number, const N: usize> {
-    func: Function<T, N>,
-    args: Vec<Value<T, N>>,
+    pub func: Function<T, N>,
+    pub args: Vec<Value<T, N>>,
 }
 
 impl<T: Number, const N: usize> FunctionInvoke<T, N> {

@@ -95,7 +95,10 @@ impl<'a, T: Number, const N: usize> ExpressionCompiler<'a, T, N> {
             tokens.push(self.parse_term_neg()?);
         }
         if self.peek() != terminator {
-            return Err(ParserError::ExpectedChar(self.pos, terminator.unwrap_or_default()));
+            return Err(ParserError::ExpectedChar(
+                self.pos,
+                terminator.unwrap_or_default(),
+            ));
         }
         self.pos += 1;
         let stack = Self::shunting_yard(tokens)?;
@@ -180,7 +183,7 @@ impl<'a, T: Number, const N: usize> ExpressionCompiler<'a, T, N> {
             self.assert_char(')')?;
             vec![]
         } else {
-            let mut args = (0..function.args)
+            let mut args = (0..function.args - 1)
                 .map(|_| self.parse_expression(Some(',')))
                 .collect::<Result<Vec<Value<T, N>>, ParserError>>()?;
             args.push(self.parse_expression(Some(')'))?);

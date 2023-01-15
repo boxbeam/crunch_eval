@@ -1,6 +1,6 @@
-use std::{str::FromStr, fmt::Debug};
+use std::{fmt::Debug, str::FromStr};
 
-use num::{CheckedAdd, CheckedSub, CheckedDiv, CheckedMul, traits::CheckedRem};
+use num::{traits::CheckedRem, CheckedAdd, CheckedDiv, CheckedMul, CheckedSub};
 
 use crate::EvalError;
 
@@ -15,7 +15,7 @@ macro_rules! op_trait {
         pub trait $name: Sized {
             fn $op_name(&self, other: Self) -> Option<Self>;
         }
-    }
+    };
 }
 
 op_trait!(Add, add);
@@ -38,7 +38,15 @@ macro_rules! impl_op_traits_f {
     ($type:ty) => {
         impl_op_trait_f!($type, Add, add, +);
         impl_op_trait_f!($type, Sub, sub, -);
-        impl_op_trait_f!($type, Div, div, /);
+        impl Div for $type {
+            fn div(&self, other: Self) -> Option<Self> {
+                if other == 0.0 {
+                    None
+                } else {
+                    Some(self / other)
+                }
+            }
+        }
         impl_op_trait_f!($type, Mul, mul, *);
         impl_op_trait_f!($type, Rem, rem, %);
     }
@@ -51,7 +59,7 @@ macro_rules! impl_op_trait {
                 self.$checked(&other)
             }
         }
-    }
+    };
 }
 
 macro_rules! impl_op_traits {
@@ -61,7 +69,7 @@ macro_rules! impl_op_traits {
         impl_op_trait!($type, Mul, mul, checked_mul);
         impl_op_trait!($type, Div, div, checked_div);
         impl_op_trait!($type, Rem, rem, checked_rem);
-    }
+    };
 }
 
 impl_op_traits!(i8);
@@ -99,7 +107,7 @@ macro_rules! impl_pow {
                 Ok(<$lhs>::powf(*self, exp as $rhs))
             }
         }
-    }
+    };
 }
 
 impl_pow!(i32, u32);
@@ -135,7 +143,7 @@ macro_rules! trig_func {
         fn $name(&self) -> Self {
             <$as>::$name(*self as $as) as $target
         }
-    }
+    };
 }
 
 macro_rules! impl_trig {
@@ -145,7 +153,7 @@ macro_rules! impl_trig {
             trig_func!(cos, $target, $as);
             trig_func!(tan, $target, $as);
         }
-    }
+    };
 }
 
 impl_trig!(f32, f32);

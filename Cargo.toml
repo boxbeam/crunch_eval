@@ -5,6 +5,8 @@ edition = "2021"
 license = "MIT"
 description = "A high-performance expression evaluator"
 repository = "https://github.com/Redempt/crunch_eval"
+readme = "README.md"
+keywords = ["eval", "expression", "expr", "evaluation", "evaluator"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 

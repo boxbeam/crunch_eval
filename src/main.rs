@@ -1,4 +1,4 @@
-use crunch_eval::{env::ExprEnv, expr::Expr};
+use crunch_eval::expr::Expr;
 
 fn main() {
     loop {
@@ -7,7 +7,7 @@ fn main() {
             .into_iter()
             .map(|line| line.unwrap())
             .for_each(|line| {
-                let expr = Expr::compile(line, ExprEnv::default().with_trig()).unwrap();
+                let expr = Expr::compile(line).unwrap();
                 let val: f64 = expr.evaluate(&[]).unwrap();
                 println!(" = {}", val);
             });

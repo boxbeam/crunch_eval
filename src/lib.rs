@@ -1,15 +1,13 @@
-use std::str::FromStr;
-use num::{Num, CheckedAdd, CheckedSub, CheckedDiv, CheckedMul, traits::CheckedRem};
+use std::fmt::Debug;
 use func::*;
+use number::Number;
 
-mod parser;
 pub mod compiler;
 pub mod env;
+pub mod expr;
+pub mod number;
+mod parser;
 mod func;
-mod linked_list;
-
-pub trait Number: 'static + Num + FromStr + Copy + Default + Pow<Self> + CheckedAdd + CheckedSub + CheckedDiv + CheckedMul + CheckedRem {}
-impl<T: 'static + Num + FromStr + Copy + Default + Pow<Self> + CheckedAdd + CheckedSub + CheckedDiv + CheckedMul + CheckedRem> Number for T {}
 
 #[derive(Debug)]
 pub enum EvalError {
@@ -18,44 +16,7 @@ pub enum EvalError {
     Overflow,
 }
 
-pub trait Pow<Rhs> {
-    fn pow(&self, exp: Rhs) -> Result<Rhs, EvalError>;
-}
-
-macro_rules! impl_pow {
-    ($lhs:ty, $rhs:ty) => {
-        #[allow(unused_comparisons)]
-        impl Pow<Self> for $lhs {
-            fn pow(&self, exp: Self) -> Result<Self, EvalError> {
-                if exp < 0 {
-                    return Err(EvalError::NegativeIntegerExponent);
-                }
-                Ok(<$lhs>::pow(*self, exp as $rhs))
-            }
-        }
-    };
-    ($lhs: ty, $rhs: ty, f) => {
-        impl Pow<Self> for $lhs {
-            fn pow(&self, exp: Self) -> Result<Self, EvalError> {
-                Ok(<$lhs>::powf(*self, exp as $rhs))
-            }
-        }
-    }
-}
-
-impl_pow!(i32, u32);
-impl_pow!(u32, u32);
-impl_pow!(i8, u32);
-impl_pow!(u8, u32);
-impl_pow!(i16, u32);
-impl_pow!(u16, u32);
-impl_pow!(i64, u32);
-impl_pow!(u64, u32);
-impl_pow!(i128, u32);
-impl_pow!(f32, f32, f);
-impl_pow!(f64, f64, f);
-
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 enum Value<T: Number, const N: usize> {
     Constant(T),
     Variable(usize),
